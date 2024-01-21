@@ -23,18 +23,28 @@ import People from "./components/People";
 
 /*This is for Tours rendering*/
 const App = () => {
-  const [isLoading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [tours, setTours] = useState([]);
 
+  const fetchTours = async () => {
+    setLoading(true);
+    try {
+      const res = await fetch("https://course-api.com/react-tours-project");
+      const data = await res.json();
+      setTours(data);
+      console.log(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
   useEffect(() => {
-    fetch("https://course-api.com/react-tours-project")
-      .then((response) => response.json())
-      .then((data) => {
-        setTours(data);
-        setLoading(false);
-      });
-  });
-  return <h1>Our Tours</h1>;
+    fetchTours();
+  }, []);
+  return (
+    <div>
+      <h1>Our Tours</h1>
+    </div>
+  );
 };
 
 export default App;
