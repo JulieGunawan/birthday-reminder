@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { data } from "./data";
-import People from "./components/People";
+import Tours from "./components/Tours";
+import Loading from "./components/Loading";
 
 /*This is for Birthday Reminder rendering*/
 // const App = () => {
@@ -25,6 +26,10 @@ import People from "./components/People";
 const App = () => {
   const [loading, setLoading] = useState(true);
   const [tours, setTours] = useState([]);
+  const removeTour = (id) => {
+    const newTours = tours.filter((tour) => tour.id !== id);
+    setTours(newTours);
+  };
 
   const fetchTours = async () => {
     setLoading(true);
@@ -36,14 +41,25 @@ const App = () => {
     } catch (error) {
       console.log(error);
     }
+    setLoading(false);
   };
   useEffect(() => {
     fetchTours();
   }, []);
+
+  if (loading) {
+    return (
+      <main>
+        <Loading />
+      </main>
+    );
+  }
+
   return (
-    <div>
-      <h1>Our Tours</h1>
-    </div>
+    <main>
+      <h1>{tours.length} Our Tours</h1>
+      <Tours tours={tours} removeTour={removeTour} />
+    </main>
   );
 };
 
